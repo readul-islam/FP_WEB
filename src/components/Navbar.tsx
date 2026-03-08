@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
+import FocusPilotLogo from "./FocusPilotLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
 
@@ -70,16 +71,9 @@ const Navbar = ({ onAuthClick }: NavbarProps) => {
           {/* Logo */}
           <motion.a
             href="#"
-            className="flex items-center gap-2 group"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="w-10 relative h-10 rounded-lg bg-primary/20 flex items-center justify-center glow-border">
-            {/* <Rocket className="w-5 h-5 text-primary" /> */}
-            <img src="/logo.png" alt="FocusPilot" width={40} height={40} />
-            </div>
-            <span className="text-xl font-bold text-foreground">
-              Focus<span className="text-primary absolute text-xs italic font-mono ">Pilot</span>
-            </span>
+            <FocusPilotLogo variant="icon" size={36} />
           </motion.a>
 
           {/* Desktop Navigation */}
@@ -169,7 +163,7 @@ const Navbar = ({ onAuthClick }: NavbarProps) => {
                 </motion.button>
                 <motion.button
                   onClick={onAuthClick}
-                  className="btn-primary-glow px-5 py-2.5 rounded-lg"
+                  className="btn-primary-glow opacity-70 hover:opacity-100 px-5 py-2.5 rounded-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

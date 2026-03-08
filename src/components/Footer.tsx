@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Rocket, Github, Twitter, Linkedin, Check } from "lucide-react";
+import FocusPilotLogo from "./FocusPilotLogo";
 
 const Footer = () => {
   const links = {
@@ -34,12 +35,13 @@ const Footer = () => {
               className="flex items-center gap-2 group mb-4"
               whileHover={{ scale: 1.02 }}
             >
-              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center glow-border">
+                <FocusPilotLogo variant="full" size={36} />
+              {/* <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center glow-border">
                 <Rocket className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-xl font-bold">
+              </div> */}
+              {/* <span className="text-xl font-bold">
                 Focus<span className="text-primary">Pilot</span>
-              </span>
+              </span> */}
             </motion.a>
             <p className="text-muted-foreground text-sm max-w-xs mb-6">
               Your AI co-pilot for deep work. Stop context-switching, start

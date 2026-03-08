@@ -6,66 +6,66 @@
 
 @layer base {
   :root {
-    /* Deep Space Palette */
-    --background: 222 47% 2%;
+    /* Deep Space Palette — matches Extension & App Emerald theme */
+    --background: 226 50% 8%;       /* #0a0f1e */
     --foreground: 210 40% 98%;
 
-    --card: 222 47% 4%;
+    --card: 221 39% 11%;            /* #111827 */
     --card-foreground: 210 40% 98%;
 
-    --popover: 222 47% 4%;
+    --popover: 221 39% 11%;
     --popover-foreground: 210 40% 98%;
 
-    /* Neon Electric Blue */
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 2%;
+    /* Emerald Green — brand primary */
+    --primary: 160 84% 39%;         /* #10B981 */
+    --primary-foreground: 226 50% 8%;
 
-    --secondary: 217 33% 17%;
+    --secondary: 215 28% 17%;       /* #1e293b */
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 215 28% 13%;
+    --muted-foreground: 215 20% 56%; /* #64748b */
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 222 47% 2%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 226 50% 8%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    /* Success/Growth Green */
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
+    /* Success — lighter emerald variant */
+    --success: 158 64% 52%;         /* #34D399 */
+    --success-foreground: 226 50% 8%;
 
-    /* Warning/Pain Red */
-    --warning: 0 72% 51%;
-    --warning-foreground: 210 40% 98%;
+    /* Warning — amber, matches app & extension */
+    --warning: 43 96% 50%;          /* #f59e0b */
+    --warning-foreground: 226 50% 8%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 60%;
+    --border: 213 36% 18%;          /* #1f2d40 */
+    --input: 213 36% 18%;
+    --ring: 160 84% 39%;
 
     --radius: 0.75rem;
 
     /* Glass morphism */
-    --glass-bg: 222 47% 6%;
+    --glass-bg: 221 39% 13%;
     --glass-border: 0 0% 100%;
-    
-    /* Glow effects */
-    --glow-primary: 217 91% 60%;
-    --glow-success: 142 76% 36%;
-    --glow-warning: 0 72% 51%;
 
-    --sidebar-background: 222 47% 4%;
+    /* Glow effects */
+    --glow-primary: 160 84% 39%;
+    --glow-success: 158 64% 52%;
+    --glow-warning: 43 96% 50%;
+
+    --sidebar-background: 226 50% 6%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 222 47% 2%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 226 50% 8%;
+    --sidebar-accent: 215 28% 17%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-border: 213 36% 18%;
+    --sidebar-ring: 160 84% 39%;
   }
 
-  /* Light Theme - Crisp Slate-White */
+  /* Light Theme */
   .light {
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
@@ -73,34 +73,34 @@
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 217 91% 50%;
+    --primary: 160 84% 35%;         /* darker emerald for light bg contrast */
     --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 92%;
+    --secondary: 160 20% 92%;       /* subtle green tint */
     --secondary-foreground: 222 47% 11%;
-    --muted: 217 33% 92%;
+    --muted: 160 15% 92%;
     --muted-foreground: 215 20% 45%;
-    --accent: 217 91% 50%;
+    --accent: 160 84% 35%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --success: 142 76% 36%;
+    --success: 158 64% 40%;
     --success-foreground: 0 0% 100%;
-    --warning: 0 72% 51%;
+    --warning: 43 96% 45%;
     --warning-foreground: 0 0% 100%;
-    --border: 217 33% 85%;
-    --input: 217 33% 85%;
-    --ring: 217 91% 50%;
+    --border: 160 15% 85%;
+    --input: 160 15% 85%;
+    --ring: 160 84% 35%;
     --glass-bg: 0 0% 100%;
-    --glass-border: 217 33% 85%;
-    --glow-primary: 217 91% 50%;
+    --glass-border: 160 15% 85%;
+    --glow-primary: 160 84% 35%;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary: 160 84% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 33% 92%;
+    --sidebar-accent: 160 20% 92%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 217 33% 85%;
-    --sidebar-ring: 217 91% 50%;
+    --sidebar-border: 160 15% 85%;
+    --sidebar-ring: 160 84% 35%;
   }
 }
 
@@ -125,19 +125,19 @@
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)];
+    @apply glass-card transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)];
   }
 
   .glow-border {
-    @apply border border-primary/50 shadow-[0_0_20px_rgba(59,130,246,0.3),inset_0_0_20px_rgba(59,130,246,0.05)];
+    @apply border border-primary/50 shadow-[0_0_20px_rgba(16,185,129,0.3),inset_0_0_20px_rgba(16,185,129,0.05)];
   }
 
   .glow-text {
-    @apply text-primary drop-shadow-[0_0_10px_rgba(59,130,246,0.5)];
+    @apply text-primary drop-shadow-[0_0_10px_rgba(16,185,129,0.5)];
   }
 
   .btn-primary-glow {
-    @apply bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:scale-105;
+    @apply bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:scale-105;
   }
 
   .btn-glass {
@@ -153,7 +153,7 @@
   }
 
   .heatmap-cell-success {
-    @apply bg-primary/30 border border-primary/40 shadow-[0_0_10px_rgba(59,130,246,0.3)];
+    @apply bg-primary/30 border border-primary/40 shadow-[0_0_10px_rgba(16,185,129,0.3)];
   }
 
   .section-gradient {
@@ -161,7 +161,7 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-primary via-blue-400 to-cyan-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-emerald-400 to-teal-400 bg-clip-text text-transparent;
   }
 }
 
