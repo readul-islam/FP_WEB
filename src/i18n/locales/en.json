@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "demo": "Demo",
+    "tools": "Tools",
+    "journey": "Journey",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "badge": "AI-Powered Productivity",
+    "title": "Build Your",
+    "titleHighlight": "SaaS Empire",
+    "subtitle": "Stop watching tutorials. Start shipping code. FocusPilot uses AI-powered voice nudges and hard-locks to keep you in the zone.",
+    "cta": "Start Building",
+    "demo": "Watch Demo"
+  },
+  "features": {
+    "title": "Supercharge Your",
+    "titleHighlight": "Productivity",
+    "subtitle": "Powerful tools designed for developers who ship"
+  },
+  "pricing": {
+    "title": "Simple,",
+    "titleHighlight": "Transparent Pricing",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 31%"
+  },
+  "commandCenter": {
+    "badge": "Command Center",
+    "title": "Take Command of Your",
+    "titleHighlight": "Empire",
+    "subtitle": "Your mission control for productivity. Track, analyze, and conquer."
+  },
+  "globalMomentum": {
+    "badge": "Global Momentum",
+    "title": "Join the",
+    "titleHighlight": "Global Movement",
+    "subtitle": "Thousands of developers building their empires right now"
+  },
+  "wallOfLove": {
+    "badge": "Wall of Love",
+    "title": "Loved by",
+    "titleHighlight": "Builders",
+    "subtitle": "Join thousands of developers who transformed their productivity"
+  },
+  "mobileApp": {
+    "badge": "Mobile Experience",
+    "title": "Your Empire,",
+    "titleHighlight": "Anywhere",
+    "subtitle": "Stay focused on the go with our powerful mobile apps"
+  },
+  "footer": {
+    "status": "System Status",
+    "operational": "All Systems Operational"
+  }
+}
