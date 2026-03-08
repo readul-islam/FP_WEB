@@ -13,6 +13,7 @@ import {
   Sun,
   Smartphone,
   Laptop,
+  Download,
 } from "lucide-react";
 import FocusPilotLogo from "@/components/FocusPilotLogo";
 
@@ -277,6 +278,282 @@ const RealWorldUse = () => (
 );
 
 /* ─────────────────────────────────────────────
+   SVG builders
+───────────────────────────────────────────── */
+function buildIconSVG(size: number, white: boolean, appIcon: boolean, darkBg = false): string {
+  const ring  = white || appIcon ? "#FFFFFF" : "#10B981";
+  const inner = white || appIcon ? "rgba(255,255,255,0.4)" : "#64748b";
+  const bg    = appIcon  ? `<rect width="100" height="100" rx="22" fill="#10B981"/>`
+              : darkBg   ? `<rect width="100" height="100" fill="#0a0f1e"/>`
+              : "";
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${bg}
+  <circle cx="50" cy="50" r="42" stroke="${ring}" stroke-width="6" stroke-linecap="round" stroke-dasharray="180 80"/>
+  <circle cx="50" cy="50" r="28" stroke="${inner}" stroke-width="2" stroke-dasharray="4 4" opacity="0.3"/>
+  <path d="M50 24L72 70L50 60L28 70L50 24Z" fill="${ring}"/>
+  <circle cx="50" cy="50" r="4" fill="#FFFFFF"/>
+</svg>`;
+}
+
+function buildFullLogoSVG(scheme: "default" | "white" | "dark"): string {
+  const ring     = scheme === "default" ? "#10B981" : scheme === "dark" ? "#10B981" : "#FFFFFF";
+  const inner    = scheme === "white"   ? "rgba(255,255,255,0.4)" : "#64748b";
+  const textMain = scheme === "white"   ? "#FFFFFF" : scheme === "dark" ? "#f1f5f9" : "#0f172a";
+  const rectFill = scheme === "white"   ? "#10B981" : scheme === "dark" ? "#0a0f1e" : "#ffffff";
+  return `<svg width="300" height="80" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="80" fill="${rectFill}"/>
+  <g transform="translate(18,18) scale(0.44)">
+    <circle cx="50" cy="50" r="42" stroke="${ring}" stroke-width="6" stroke-linecap="round" stroke-dasharray="180 80"/>
+    <circle cx="50" cy="50" r="28" stroke="${inner}" stroke-width="2" stroke-dasharray="4 4" opacity="0.3"/>
+    <path d="M50 24L72 70L50 60L28 70L50 24Z" fill="${ring}"/>
+    <circle cx="50" cy="50" r="4" fill="#FFFFFF"/>
+  </g>
+  <text x="76" y="39" font-size="22" font-weight="700" font-family="Space Grotesk, system-ui, sans-serif" letter-spacing="-0.5"><tspan fill="${textMain}">Focus</tspan><tspan fill="${ring}">pilot</tspan></text>
+  <text x="77" y="55" font-size="9" font-family="JetBrains Mono, monospace" letter-spacing="2.5" fill="${ring}" opacity="0.7">NAVIGATE SUCCESS</text>
+</svg>`;
+}
+
+/* ─────────────────────────────────────────────
+   Download utilities
+───────────────────────────────────────────── */
+function triggerDownload(url: string, filename: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function svgToPNGBuffer(svgStr: string, w: number, h: number): Promise<ArrayBuffer> {
+  const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+  const svgUrl  = URL.createObjectURL(svgBlob);
+  const img     = new Image();
+  return new Promise<ArrayBuffer>((resolve) => {
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(svgUrl);
+      canvas.toBlob((b) => b!.arrayBuffer().then(resolve), "image/png");
+    };
+    img.src = svgUrl;
+  });
+}
+
+async function downloadICO(svgStr: string, size: number, filename: string) {
+  const pngBuf     = await svgToPNGBuffer(svgStr, size, size);
+  const dataOffset = 6 + 16; // ICONDIR header + 1 ICONDIRENTRY
+  const total      = dataOffset + pngBuf.byteLength;
+  const buf        = new ArrayBuffer(total);
+  const view       = new DataView(buf);
+  // ICONDIR
+  view.setUint16(0, 0, true); view.setUint16(2, 1, true); view.setUint16(4, 1, true);
+  // ICONDIRENTRY
+  const s = size >= 256 ? 0 : size;
+  view.setUint8(6, s); view.setUint8(7, s); view.setUint8(8, 0); view.setUint8(9, 0);
+  view.setUint16(10, 1, true); view.setUint16(12, 32, true);
+  view.setUint32(14, pngBuf.byteLength, true); view.setUint32(18, dataOffset, true);
+  new Uint8Array(buf).set(new Uint8Array(pngBuf), dataOffset);
+  const blob = new Blob([buf], { type: "image/x-icon" });
+  triggerDownload(URL.createObjectURL(blob), filename);
+}
+
+async function downloadAsset(
+  svgStr: string,
+  format: "svg" | "png" | "jpg",
+  filename: string,
+  canvasW: number,
+  canvasH: number,
+) {
+  if (format === "svg") {
+    const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+    triggerDownload(URL.createObjectURL(blob), filename);
+    return;
+  }
+  const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+  const svgUrl  = URL.createObjectURL(svgBlob);
+  const img     = new Image();
+  await new Promise<void>((resolve) => {
+    img.onload = () => {
+      const canvas  = document.createElement("canvas");
+      canvas.width  = canvasW;
+      canvas.height = canvasH;
+      const ctx = canvas.getContext("2d")!;
+      if (format === "jpg") { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvasW, canvasH); }
+      ctx.drawImage(img, 0, 0, canvasW, canvasH);
+      URL.revokeObjectURL(svgUrl);
+      canvas.toBlob(
+        (b) => { if (b) triggerDownload(URL.createObjectURL(b), filename); resolve(); },
+        format === "jpg" ? "image/jpeg" : "image/png",
+        0.95,
+      );
+    };
+    img.src = svgUrl;
+  });
+}
+
+/* ─────────────────────────────────────────────
+   Logo Downloader
+───────────────────────────────────────────── */
+type AssetStyle = "icon" | "app-icon" | "logo-light" | "logo-dark" | "logo-on-green";
+type DlFormat   = "svg" | "png" | "jpg" | "ico";
+
+const STYLE_OPTIONS: { id: AssetStyle; label: string }[] = [
+  { id: "icon",          label: "Icon (transparent)" },
+  { id: "app-icon",      label: "App Icon"           },
+  { id: "logo-light",    label: "Logo (light bg)"    },
+  { id: "logo-dark",     label: "Logo (dark bg)"     },
+  { id: "logo-on-green", label: "Logo (green bg)"    },
+];
+
+const SIZE_GROUPS = [
+  { id: "favicon",   label: "Favicon",   sizes: [16, 32, 48]       },
+  { id: "extension", label: "Extension", sizes: [16, 32, 48, 128]  },
+  { id: "standard",  label: "Standard",  sizes: [64, 128, 256, 512]},
+];
+
+const LOGO_HEIGHTS = [40, 80, 160, 320];
+
+const LogoDownloader = () => {
+  const [assetStyle, setAssetStyle] = useState<AssetStyle>("app-icon");
+  const [fmt, setFmt]               = useState<DlFormat>("png");
+
+  const isIcon = assetStyle === "icon" || assetStyle === "app-icon";
+
+  function getSVG(sz: number) {
+    if (assetStyle === "icon")          return buildIconSVG(sz, false, false);
+    if (assetStyle === "app-icon")      return buildIconSVG(sz, true,  true);
+    if (assetStyle === "logo-light")    return buildFullLogoSVG("default");
+    if (assetStyle === "logo-dark")     return buildFullLogoSVG("dark");
+    return buildFullLogoSVG("white");
+  }
+
+  function getDims(sz: number): [number, number] {
+    return isIcon ? [sz, sz] : [Math.round(sz * 300 / 80), sz];
+  }
+
+  function handleDownload(sz: number) {
+    const svg  = getSVG(sz);
+    const name = `focuspilot_${assetStyle}_${sz}px`;
+    if (fmt === "ico") {
+      const icoSvg = assetStyle === "logo-dark" ? buildIconSVG(sz, false, false, true) : svg;
+      downloadICO(icoSvg, sz, `${name}.ico`);
+    } else {
+      const [w, h] = getDims(sz);
+      downloadAsset(svg, fmt, `${name}.${fmt}`, w, h);
+    }
+  }
+
+  return (
+    <div className="mt-8 rounded-xl border p-6" style={{ background: "#fff", borderColor: "#e2e8f0" }}>
+      <div className="flex items-center gap-2 mb-5">
+        <Download className="w-4 h-4" style={{ color: BRAND.green }} />
+        <h3 className="text-sm font-bold text-gray-900">Download Assets</h3>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-5 mb-6">
+        {/* Style selector */}
+        <div className="flex-1">
+          <p className="text-[10px] font-mono tracking-widest text-gray-400 mb-2 uppercase">Style</p>
+          <div className="flex flex-wrap gap-2">
+            {STYLE_OPTIONS.map((o) => (
+              <button
+                key={o.id}
+                onClick={() => {
+                  setAssetStyle(o.id);
+                  if ((o.id === "logo-light" || o.id === "logo-on-green") && fmt === "ico") setFmt("png");
+                }}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                style={{
+                  background: assetStyle === o.id ? `${BRAND.green}18` : "#f8fafc",
+                  color:      assetStyle === o.id ? BRAND.green : "#64748b",
+                  border:     `1px solid ${assetStyle === o.id ? `${BRAND.green}50` : "#e2e8f0"}`,
+                }}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Format selector */}
+        <div>
+          <p className="text-[10px] font-mono tracking-widest text-gray-400 mb-2 uppercase">Format</p>
+          <div className="flex gap-2">
+            {(["svg", "png", "jpg", "ico"] as DlFormat[]).map((f) => {
+              const disabled = f === "ico" && !isIcon && assetStyle !== "logo-dark";
+              return (
+                <button
+                  key={f}
+                  onClick={() => !disabled && setFmt(f)}
+                  disabled={disabled}
+                  className="px-4 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{
+                    background: fmt === f ? BRAND.green : "#f8fafc",
+                    color:      fmt === f ? "#fff" : "#64748b",
+                    border:     `1px solid ${fmt === f ? BRAND.green : "#e2e8f0"}`,
+                  }}
+                >
+                  {f}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Size groups */}
+      {isIcon ? (
+        <div className="space-y-3">
+          {SIZE_GROUPS.map((group) => (
+            <div key={group.id} className="flex items-center gap-3">
+              <p className="text-[10px] font-mono tracking-widest text-gray-400 w-20 shrink-0 uppercase">
+                {group.label}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {group.sizes.map((sz) => (
+                  <button
+                    key={sz}
+                    onClick={() => handleDownload(sz)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:shadow-sm"
+                    style={{ background: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0" }}
+                  >
+                    <Download className="w-3 h-3" />
+                    {sz}×{sz}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <p className="text-[10px] font-mono tracking-widest text-gray-400 w-20 shrink-0 uppercase">Sizes</p>
+          <div className="flex flex-wrap gap-2">
+            {LOGO_HEIGHTS.map((h) => {
+              const w = Math.round(h * 300 / 80);
+              return (
+                <button
+                  key={h}
+                  onClick={() => handleDownload(h)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:shadow-sm"
+                  style={{ background: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0" }}
+                >
+                  <Download className="w-3 h-3" />
+                  {w}×{h}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
    Variant Card
 ───────────────────────────────────────────── */
 const VariantCard = ({ v, index }: { v: Variant; index: number }) => (
@@ -436,6 +713,7 @@ export default function BrandPage() {
                   <VariantCard key={v.id} v={v} index={i} />
                 ))}
               </div>
+              <LogoDownloader />
             </motion.div>
           )}
 
